@@ -4,28 +4,38 @@ var myKey = hideKey.apiKey;
 var cityName = "san+diego";
 var lat, lon;
 
-//console.log(myKey); //logs key
 
+//URLs needed for API calls
 var currentURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=" + myKey;
 var fiveDayURL;
 
 
 
-console.log(currentURL);
-
-
 //Create button and show result = search button clicked
-/*
+function addSearch(e) {
+    e.preventDefault();
 
+    let newCityButton = $('<button>');
+    newCityButton.addClass('btn btn-primary mb-1');
+    let cityButtonName = $('#search-city').val();
+    newCityButton.html(cityButtonName);
+
+    $('#city-buttons').prepend(newCityButton);
+
+    $('#search-city').val('');
 //after creates button,, calls cityWeatherInformation
-
+    //cityWeatherInformation();
 //need to save button to local storage
-*/
+
+    
+}
+
 
 //Show results = city button clicked
 function cityWeatherInformation(){
+
     //Remove hidden
-    $('#current-weather').removeAttr('hidden');
+    $('.results').removeAttr('hidden');
 
     //Current Forecast
     $.ajax({
@@ -105,26 +115,7 @@ function cityWeatherInformation(){
 
                 $(addTo).append($('<p>').text(`Humidity: ${day.humidity}%`));
 
-                /*
-                //create card and card body
-                //append new date, new temp, new humidity
-                let newCard = $('<div>').addClass("card");
-                let newCardBody = $('div').addClass("card-body");
 
-                newCardBody.append($('<p>').text(dayMonth, dayDate, dayYear));
-                newCardBody.append($('<p>').text(`Temp: ${day.temp.day} &#8457;`));   
-                newCardBody.append($('<p>').text(`Humidity: ${day.humidity}%`));
-
-
-                //append new card body
-                newCard.append(newCardBody);
-
-                let addTo = '#day-' + i;
-                console.log(addTo);
-
-                //append card to correct div
-                $(addTo).append(newCard);
-                */
 
             };
 
@@ -137,10 +128,15 @@ function cityWeatherInformation(){
 
 };
 
-cityWeatherInformation();
 
 //search button clicked, call function to create a button and show result
+$('#search-button').click(addSearch);
 
 //city button clicked
+$('#city-buttons').click(cityWeatherInformation);
+
+function test() {
+    console.log("test test test");
+};
 
 //call local storage function once page opens

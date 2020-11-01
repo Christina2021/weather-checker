@@ -22,7 +22,7 @@
             <form>
                 <label for="search-city" id="search-header">Search for a City:</label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="City Name" aria-label="City Name">
+                    <input type="text" class="form-control" id="search-city" placeholder="City Name" aria-label="City Name">
                     <div class="input-group-append">
                         <button class="btn btn-primary btn-outline-secondary" type="button" id="search-button">
                           <i class="fas fa-search"></i>
@@ -30,9 +30,12 @@
                     </div>
                 </div>
             </form>
+            <div id="city-buttons">
+                <!--City Buttons will go here-->
+            </div>
         </div>
-        <div class="results">
-            <div class="container m-3 p-3" id="current-weather" hidden>
+        <div class="results" hidden>
+            <div class="container m-3 p-3" id="current-weather">
                 <h2 class="mb-3" id="name-and-date"></h2>
             </div>
             <div class="container fiveDay m-3">

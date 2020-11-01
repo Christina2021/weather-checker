@@ -22,6 +22,11 @@ header {
     color: white;
 }
 
+#city-buttons button {
+    width: 100%;
+    text-align: left;
+}
+
 /* Results area */
 .results {
     float:left;
