@@ -11,7 +11,9 @@ $(window).keydown(function(event){
 var myKey = hideKey.apiKey;
 var cityName;
 var lat, lon;
-
+var addSearchHistory;
+var allSearchHistory = [];
+var searchHistory;
 
 //URLs needed for API calls
 var currentURL;
@@ -31,12 +33,30 @@ function addSearch(e) {
 
     $('#city-buttons').prepend(newCityButton);
 
+    console.log(cityButtonName);
+    //var for localStorage key-value pair; puts city name in object
+    addSearchHistory = {city: cityButtonName};
+    //get search history from localStorage; parse
+    allSearchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+    //if nothing currently in local storage
+    if(!allSearchHistory){
+        //search history should be an empty array
+        allSearchHistory = [];
+        //add new object
+        allSearchHistory[0] = addSearchHistory;
+    } else {
+        //Add new object
+        allSearchHistory.push(addSearchHistory);
+    }
+    //Convert object into a string to store
+    localStorage.setItem("citySearchHistory",JSON.stringify(allSearchHistory));
+
+
     $('#search-city').val('');
 
     cityButtonName = cityButtonName.toLowerCase().split(' ').join('+');
     cityWeatherInformation(cityButtonName);
     
-    //need to save button to local storage
 
 }
 
@@ -232,9 +252,21 @@ $('#city-buttons').click(searchHistoryCity);
 
 
 //call local storage function once page opens
+function dispalySearchHistory() {
+    //get objects from localStorage
+    searchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+    if(!searchHistory){
+        return;
+    };
+    for(i = 0; i < searchHistory.length; i++){
+        newCityButton = $('<button>');
+        newCityButton.addClass('btn btn-primary mb-1');
+        cityButtonName = searchHistory[i].city;
+        newCityButton.attr('id', cityButtonName);
+        newCityButton.html(cityButtonName);
+    
+        $('#city-buttons').prepend(newCityButton);
+    };
+};
 
-
-
-//to-do still
-//add city buttons to local storage
-//get city buttons from local storage
+dispalySearchHistory();
