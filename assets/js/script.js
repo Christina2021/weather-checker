@@ -92,57 +92,11 @@ function cityWeatherInformation(cityName){
         //Add icon to h2 based on current weather conditions
         let currentWeatherCondition = response1.weather[0].description;
         let currentWeatherConditionIcon = $('<img>')
-        let iconURL; 
 
-        switch(currentWeatherCondition){
-            case 'clear sky':
-                iconURL = "http://openweathermap.org/img/wn/01d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'few clouds':
-                iconURL = "http://openweathermap.org/img/wn/02d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'scattered clouds':
-                iconURL = "http://openweathermap.org/img/wn/03d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'broken clouds':
-                iconURL = "http://openweathermap.org/img/wn/04d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;       
-            case 'shower rain':
-                iconURL = "http://openweathermap.org/img/wn/09d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'rain':
-                iconURL = "http://openweathermap.org/img/wn/10d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;      
-            case 'thunderstorm':
-                iconURL = "http://openweathermap.org/img/wn/11d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'snow':
-                iconURL = "http://openweathermap.org/img/wn/13d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            case 'mist':
-                iconURL = "http://openweathermap.org/img/wn/50d@2x.png";
-                currentWeatherConditionIcon.attr('src', iconURL)
-                $('h2').append($('<span>').html(currentWeatherConditionIcon));
-                break;
-            default: 
-                console.log("Issue with the icons")      
-        };
+
+        addWeatherIcon(currentWeatherCondition);
+        $('h2').append($('<span>').html(currentWeatherConditionIcon));
+
 
         //Current and 5-Day Forecast
         $.ajax({
@@ -186,58 +140,13 @@ function cityWeatherInformation(cityName){
 
                 $(addTo).append($('<h6>').text(`${dayMonth}/${dayDate}/${dayYear}`));
 
-                let fiveDayIcon = $('<img>');
+                //update
+                currentWeatherConditionIcon = $('<img>');
+                let fiveDayWeatherCondition = day.weather[0].description;
 
-                //Add icon
-                switch(currentWeatherCondition){
-                    case 'clear sky':
-                        iconURL = "http://openweathermap.org/img/wn/01d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'few clouds':
-                        iconURL = "http://openweathermap.org/img/wn/02d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'scattered clouds':
-                        iconURL = "http://openweathermap.org/img/wn/03d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'broken clouds':
-                        iconURL = "http://openweathermap.org/img/wn/04d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;       
-                    case 'shower rain':
-                        iconURL = "http://openweathermap.org/img/wn/09d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'rain':
-                        iconURL = "http://openweathermap.org/img/wn/10d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;      
-                    case 'thunderstorm':
-                        iconURL = "http://openweathermap.org/img/wn/11d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'snow':
-                        iconURL = "http://openweathermap.org/img/wn/13d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    case 'mist':
-                        iconURL = "http://openweathermap.org/img/wn/50d@2x.png";
-                        fiveDayIcon.attr('src', iconURL)
-                        $(addTo).append(fiveDayIcon);
-                        break;
-                    default: 
-                        console.log("Issue with the icons")      
-                };
+                addWeatherIcon(fiveDayWeatherCondition);
+                $(addTo).append(currentWeatherConditionIcon);
+
 
                 $(addTo).append($('<p>').html(`Temp: ${day.temp.day} &#8457;`));
 
@@ -247,10 +156,63 @@ function cityWeatherInformation(cityName){
             };
 
         });
-        
+    
+        function addWeatherIcon(weatherCondition){
+            let iconURL; 
+            switch(weatherCondition){
+                case 'clear sky':
+                    iconURL = "http://openweathermap.org/img/wn/01d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'few clouds':
+                    iconURL = "http://openweathermap.org/img/wn/02d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'scattered clouds':
+                    iconURL = "http://openweathermap.org/img/wn/03d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'broken clouds':
+                case 'overcast clouds':
+                    iconURL = "http://openweathermap.org/img/wn/04d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;       
+                case 'shower rain':
+                    iconURL = "http://openweathermap.org/img/wn/09d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'rain':
+                    iconURL = "http://openweathermap.org/img/wn/10d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;      
+                case 'thunderstorm':
+                case 'thunderstorm with light rain':
+                case 'thunderstorm with rain':
+                case 'thunderstorm with heavy rain':
+                case 'light thunderstorm':
+                case 'heavy thunderstorm':
+                case 'ragged thunderstorm':
+                case 'thunderstorm with light drizzle':
+                case 'thunderstorm with drizzle':
+                case 'thunderstorm with heavy drizzle':
+                    iconURL = "http://openweathermap.org/img/wn/11d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'snow':
+                    iconURL = "http://openweathermap.org/img/wn/13d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                case 'mist':
+                    iconURL = "http://openweathermap.org/img/wn/50d@2x.png";
+                    currentWeatherConditionIcon.attr('src', iconURL)
+                    break;
+                default: 
+                    console.log("Issue with the icons");
+                    console.log(weatherCondition);
+            };
+        };
+    
     });
-
-
 
 
 };
