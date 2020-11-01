@@ -1,1 +1,33 @@
 /* Tested and linked */
+
+header {
+    text-align: center;
+    background-color: #0077b6;
+    color: #fff;
+}
+
+/* Search area */
+.search {
+    float:left;
+    height: 100vh;
+    width: 33vw;
+    background-color: #caf0f8;
+}
+
+#search-header {
+    font-weight: bold;
+}
+
+.fa-search {
+    color: white;
+}
+
+/* Results area */
+.results {
+    float:left;
+    width: 60vw;
+}
+
+#current-weather {
+    border: 1px solid #03045e;
+}
