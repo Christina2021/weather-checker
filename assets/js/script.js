@@ -1,12 +1,12 @@
 //Tested and linked
 
 var myKey = hideKey.apiKey;
-var cityName = "san+diego";
+var cityName;
 var lat, lon;
 
 
 //URLs needed for API calls
-var currentURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=" + myKey;
+var currentURL;
 var fiveDayURL;
 
 
@@ -18,6 +18,7 @@ function addSearch(e) {
     let newCityButton = $('<button>');
     newCityButton.addClass('btn btn-primary mb-1');
     let cityButtonName = $('#search-city').val();
+    newCityButton.attr('id', cityButtonName);
     newCityButton.html(cityButtonName);
 
     $('#city-buttons').prepend(newCityButton);
@@ -32,10 +33,26 @@ function addSearch(e) {
 
 
 //Show results = city button clicked
-function cityWeatherInformation(){
+function cityWeatherInformation(event){
 
     //Remove hidden
     $('.results').removeAttr('hidden');
+
+    //Reset
+    $('#current-weather').empty();
+    for (i = 1; i < 6; i++){
+        let resetFiveDay = '#day-' + i;
+        $(resetFiveDay).empty();
+    };
+
+    //Add City
+    let cityWeatherData = '';
+    cityWeatherData = event.target.id;
+    cityWeatherData = cityWeatherData.toLowerCase().split(' ').join('+');
+    cityName = cityWeatherData;
+
+
+    currentURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=" + myKey;
 
     //Current Forecast
     $.ajax({
@@ -62,7 +79,7 @@ function cityWeatherInformation(){
         let year = dateData.getFullYear();
         console.log(month, date, year);
         
-        $('#name-and-date').text(`${response1.name} (${month}/${date}/${year})`);
+        $('#current-weather').append($('<h2>').addClass("mb-3").text(`${response1.name} (${month}/${date}/${year})`));
 
 
         //UV in and 5-Day Forecast
@@ -88,6 +105,7 @@ function cityWeatherInformation(){
 
             // get 5 day forecast
             for (i = 1; i < 6; i++){
+
                 let day = response2.daily[i];
                 
                 //next date
@@ -135,8 +153,13 @@ $('#search-button').click(addSearch);
 //city button clicked
 $('#city-buttons').click(cityWeatherInformation);
 
-function test() {
-    console.log("test test test");
-};
 
 //call local storage function once page opens
+
+
+
+//to-do still
+//update city name from search feature
+//add icons for UV index, conditions (cloudy/sunny/rainy/etc.)
+//add city buttons to local storage
+//get city buttons from local storage
