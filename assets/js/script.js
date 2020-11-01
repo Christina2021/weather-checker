@@ -94,6 +94,17 @@ function cityWeatherInformation(){
                 //next Humidity
                 console.log((`Humidity: ${day.humidity}%`));
 
+
+                //Append date
+                let addTo = '#day-' + i;
+                console.log(addTo);
+
+                $(addTo).append($('<h6>').text(`${dayMonth}/${dayDate}/${dayYear}`));
+
+                $(addTo).append($('<p>').html(`Temp: ${day.temp.day} &#8457;`));
+
+                $(addTo).append($('<p>').text(`Humidity: ${day.humidity}%`));
+
                 /*
                 //create card and card body
                 //append new date, new temp, new humidity
@@ -113,7 +124,7 @@ function cityWeatherInformation(){
 
                 //append card to correct div
                 $(addTo).append(newCard);
-                */                
+                */
 
             };
 

@@ -9,8 +9,8 @@ header {
 /* Search area */
 .search {
     float:left;
-    height: 100vh;
-    width: 33vw;
+    width: 30vw;
+    height: 86vh;
     background-color: #caf0f8;
 }
 
@@ -25,9 +25,27 @@ header {
 /* Results area */
 .results {
     float:left;
-    width: 60vw;
+    width: 65vw;
 }
 
 #current-weather {
     border: 1px solid #03045e;
 }
+
+/* Five Day Columns */
+.daily {
+    width: 9.5vw;
+}
+
+.card {
+    background-color: #0096c7;
+    color: #fff;
+}
+
+.fiveDay h6 {
+    font-size: .8em;
+}
+
+.fiveDay p {
+    font-size: .7em;
+};
