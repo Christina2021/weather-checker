@@ -90,7 +90,7 @@ function cityWeatherInformation(cityName){
         
         $('#current-weather').append($('<h2>').addClass("mb-3").text(`${response1.name} (${month}/${date}/${year})`));
         //Add icon to h2 based on current weather conditions
-        let currentWeatherCondition = response1.weather[0].description;
+        let currentWeatherCondition = response1.weather[0].main;
         let currentWeatherConditionIcon = $('<img>')
 
 
@@ -115,10 +115,26 @@ function cityWeatherInformation(cityName){
             $('#current-weather').append($('<p>').text(`Wind Speed: ${response2.current.wind_speed} MPH`));
 
             // set uv index
-            let uvIndex = $('<p>');
-            $('#current-weather').append(uvIndex.text(`UV Index: `));
-            uvIndex.append($('<span>').text(`${response2.current.uvi}`));
-            //add id to span based on uv index
+            let uvIndexAdd = $('<p>');
+            let uvIndexNumber = $('<span>');
+            uvIndexNumber.addClass('p-2');
+            let uvIndex = response2.current.uvi;
+            $('#current-weather').append(uvIndexAdd.text(`UV Index: `));
+            //if uvIndex number, make uvIndexNumber background-color change
+            if(uvIndex < 3){
+                uvIndexNumber.attr('id', 'uv-index-low')
+            } else if(uvIndex < 6){
+                uvIndexNumber.attr('id', 'uv-index-moderate')
+            } else if(uvIndex < 8){
+                uvIndexNumber.attr('id', 'uv-index-high')
+            } else if(uvIndex >= 8){
+                uvIndexNumber.attr('id', 'uv-index-severe')
+            } else {
+                console.log("issue with uv index")
+            };
+
+            uvIndexAdd.append(uvIndexNumber.text(uvIndex));
+     
 
 
             // get 5 day forecast
@@ -142,7 +158,7 @@ function cityWeatherInformation(cityName){
 
                 //update
                 currentWeatherConditionIcon = $('<img>');
-                let fiveDayWeatherCondition = day.weather[0].description;
+                let fiveDayWeatherCondition = day.weather[0].main;
 
                 addWeatherIcon(fiveDayWeatherCondition);
                 $(addTo).append(currentWeatherConditionIcon);
@@ -160,49 +176,39 @@ function cityWeatherInformation(cityName){
         function addWeatherIcon(weatherCondition){
             let iconURL; 
             switch(weatherCondition){
-                case 'clear sky':
+                case 'Clear':
                     iconURL = "http://openweathermap.org/img/wn/01d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;
-                case 'few clouds':
-                    iconURL = "http://openweathermap.org/img/wn/02d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
-                    break;
-                case 'scattered clouds':
-                    iconURL = "http://openweathermap.org/img/wn/03d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
-                    break;
-                case 'broken clouds':
-                case 'overcast clouds':
+                case 'Clouds':
                     iconURL = "http://openweathermap.org/img/wn/04d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
-                    break;       
-                case 'shower rain':
+                    break;  
+                case 'Drizzle':
                     iconURL = "http://openweathermap.org/img/wn/09d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;
-                case 'rain':
+                case 'Rain':
                     iconURL = "http://openweathermap.org/img/wn/10d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;      
-                case 'thunderstorm':
-                case 'thunderstorm with light rain':
-                case 'thunderstorm with rain':
-                case 'thunderstorm with heavy rain':
-                case 'light thunderstorm':
-                case 'heavy thunderstorm':
-                case 'ragged thunderstorm':
-                case 'thunderstorm with light drizzle':
-                case 'thunderstorm with drizzle':
-                case 'thunderstorm with heavy drizzle':
+                case 'Thunderstorm':
                     iconURL = "http://openweathermap.org/img/wn/11d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;
-                case 'snow':
+                case 'Snow':
                     iconURL = "http://openweathermap.org/img/wn/13d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;
-                case 'mist':
+                case 'Mist':
+                case 'Smoke':
+                case 'Haze':
+                case 'Dust':
+                case 'Fog':
+                case 'sand':
+                case 'Ash':
+                case 'Squall':
+                case 'Tornado':
                     iconURL = "http://openweathermap.org/img/wn/50d@2x.png";
                     currentWeatherConditionIcon.attr('src', iconURL)
                     break;
@@ -230,6 +236,5 @@ $('#city-buttons').click(searchHistoryCity);
 
 
 //to-do still
-//add background for UV index
 //add city buttons to local storage
 //get city buttons from local storage

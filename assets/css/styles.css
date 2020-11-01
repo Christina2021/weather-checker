@@ -38,6 +38,23 @@ header {
     background-color: #caf0f8;
 }
 
+#uv-index-low {
+    border-radius: 10%;
+    background-color: #35F632;
+}
+#uv-index-moderate {
+    border-radius: 10%;
+    background-color: #F4F553;
+}
+#uv-index-high {
+    border-radius: 10%;
+    background-color: #FF9A3F;
+}
+#uv-index-severe {
+    border-radius: 10%;
+    background-color: #F63632;
+}
+
 /* Five Day Columns */
 .daily {
     width: 9.5vw;
