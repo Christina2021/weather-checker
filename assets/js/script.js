@@ -250,30 +250,31 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
 };
 
 
-
-//call local storage function once page opens
+//Function that runs when page is opened; Adds buttons for cities stored in localStorage
 function dispalySearchHistory() {
-    //get objects from localStorage
+    //Retrieve objects from localStorage
     let searchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+    //If there are not any objects in localStorage, don't do anything else
     if(!searchHistory){
         return;
     };
+    //Adds buttons for each object
     for(i = 0; i < searchHistory.length; i++){
         newCityButton = $('<button>');
         newCityButton.addClass('btn btn-primary mb-1');
         cityButtonName = searchHistory[i].city;
         newCityButton.attr('id', cityButtonName);
         newCityButton.html(cityButtonName);
-    
+        //Prepends the buttons to the html
         $('#city-buttons').prepend(newCityButton);
     };
 };
 
-//search button clicked, call function to create a button and show result
+//When the search button is clicked:
 $('#search-button').click(addSearch);
 
-//city button clicked
+//When one of the city buttons are clicked:
 $('#city-buttons').click(searchHistoryCity);
 
-//When page loads
+//When the page opens:
 dispalySearchHistory();
