@@ -1,6 +1,10 @@
-//Tested and linked
+//API key taken from config.js file
+let myKey = hideKey.apiKey;
 
-//Prevent Enter Key from doing default
+//If new button needs to be created
+let createNewButton;
+
+//Prevent Enter Key from doing default in input field
 $(window).keydown(function(event){
     if(event.keyCode == 13) {
       event.preventDefault();
@@ -8,139 +12,152 @@ $(window).keydown(function(event){
     }
 });
 
-var myKey = hideKey.apiKey;
-var cityName;
-var lat, lon;
-var addSearchHistory;
-var allSearchHistory = [];
-var searchHistory;
 
-//URLs needed for API calls
-var currentURL;
-var fiveDayURL;
-
-
-
-//Create button and show result = search button clicked
+//When search button is clicked: sets createNewButton to true (see cityWeatherInformation function), passes 2 city names: one that will show as entered in localStorage/button, and one that will be formatted for the api call.
 function addSearch(e) {
     e.preventDefault();
 
-    let newCityButton = $('<button>');
-    newCityButton.addClass('btn btn-primary mb-1');
-    let cityButtonName = $('#search-city').val();
-    newCityButton.attr('id', cityButtonName);
-    newCityButton.html(cityButtonName);
+    createNewButton = true;
 
-    $('#city-buttons').prepend(newCityButton);
-
-    console.log(cityButtonName);
-    //var for localStorage key-value pair; puts city name in object
-    addSearchHistory = {city: cityButtonName};
-    //get search history from localStorage; parse
-    allSearchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
-    //if nothing currently in local storage
-    if(!allSearchHistory){
-        //search history should be an empty array
-        allSearchHistory = [];
-        //add new object
-        allSearchHistory[0] = addSearchHistory;
-    } else {
-        //Add new object
-        allSearchHistory.push(addSearchHistory);
-    }
-    //Convert object into a string to store
-    localStorage.setItem("citySearchHistory",JSON.stringify(allSearchHistory));
-
-
+    //Stores city name entered as-is, then clears field
+    let citySearchName = $('#search-city').val();
     $('#search-city').val('');
 
-    cityButtonName = cityButtonName.toLowerCase().split(' ').join('+');
-    cityWeatherInformation(cityButtonName);
-    
+    //Formats and stores city name for api call
+    let cityButtonRevised = citySearchName.toLowerCase().split(' ').join('+');
 
-}
+    //Runs function for results section
+    cityWeatherInformation(cityButtonRevised, citySearchName);
+};
 
 
-//When city button clicked
+//When city button clicked, 
 function searchHistoryCity(event){
 
-    //Add City
-    let cityWeatherData = '';
-    cityWeatherData = event.target.id;
-    cityWeatherData = cityWeatherData.toLowerCase().split(' ').join('+');
-    cityWeatherInformation(cityWeatherData);
+    //Ensures another button isn't created
+    createNewButton = false;
 
-}
+    //Formats city name then runs function for results section
+    let cityButtonClicked = '';
+    cityButtonClicked = event.target.id;
+    cityButtonClicked = cityButtonClicked.toLowerCase().split(' ').join('+');
+    cityWeatherInformation(cityButtonClicked);
 
-//Show results
-function cityWeatherInformation(cityName){
+};
 
-    //Remove hidden
-    $('.results').removeAttr('hidden');
 
-    //Reset
+//Function for results section to populate.  Runs API calls and adds data to html.
+function cityWeatherInformation(cityAPIName,cityButtonName){
+
+    //Resets results section fields
     $('#current-weather').empty();
     for (i = 1; i < 6; i++){
         let resetFiveDay = '#day-' + i;
         $(resetFiveDay).empty();
     };
 
-    currentURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial&appid=" + myKey;
+    //URL for first API call
+    let currentURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityAPIName + "&units=imperial&appid=" + myKey;
 
-    //Current Forecast
+
+    //First API call for lat/lon of city to use for second API call
     $.ajax({
         url: currentURL,
-        method: "GET"
+        method: "GET",
+        //If city is not valid, will give an error message
+        error: function() {
+            $('.results').attr('hidden', true);
+            alert("City name entered is not valid.  Please enter in a valid city name.");
+            createNewButton = false;
+            return;
+        }
     })
     .then(function(response1){
 
-        //Set lat and lon for all data
-        lat = response1.coord.lat;
-        lon = response1.coord.lon;
-        fiveDayURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +"&exclude=minutely,hourly,alerts&units=imperial&appid=" + myKey;
+        //If a new button needs to be created (city was entered in search field); also adds to localStorage
+        if(createNewButton){
+            //Create a new button and add classes
+            let newCityButton = $('<button>');
+            newCityButton.addClass('btn btn-primary mb-1');
+            //Creates ID based on city name; adds city name to the new button
+            newCityButton.attr('id', cityButtonName);
+            newCityButton.html(cityButtonName);
+            //Adds new button to the site
+            $('#city-buttons').prepend(newCityButton);
 
-        //name of city and date called
+            //For localStorage
+            //Variables for search history (allSearchHistory for all objects into an array; addSearchHistory for each object)
+            let allSearchHistory = [];
+            let addSearchHistory = {city: cityButtonName};
+            //Gets current search history from localStorage; parse data
+            allSearchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+            //If nothing currently in local storage
+            if(!allSearchHistory){
+                //Search history should be an empty array
+                allSearchHistory = [];
+                //Adds first object to allSearchHistory
+                allSearchHistory[0] = addSearchHistory;
+            } else {
+                //Adds new object to allSearchHistory
+                allSearchHistory.push(addSearchHistory);
+            }
+            //Convert object into a string to store
+            localStorage.setItem("citySearchHistory",JSON.stringify(allSearchHistory));
+            createNewButton = false;
+        };
+
+        //Remove hidden attribute from results html
+        $('.results').removeAttr('hidden');
+
+        //Set latitude and longitude for second URL
+        let lat = response1.coord.lat;
+        let lon = response1.coord.lon;
+
+        //Sets url for second API call for all data
+        let fiveDayURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon +"&exclude=minutely,hourly,alerts&units=imperial&appid=" + myKey;
+
+        //Name and Date for current conditions
+        //Assigns data to variables
         $('.name').text(response1.name);
-
         let unixTime = response1.dt;
         let dateData = new Date(unixTime * 1000);
         let month = dateData.getMonth() + 1;
         let date = dateData.getDate();
         let year = dateData.getFullYear();
-        
+        //Appends data to html
         $('#current-weather').append($('<h2>').addClass("mb-3").text(`${response1.name} (${month}/${date}/${year})`));
         //Add icon to h2 based on current weather conditions
         let currentWeatherCondition = response1.weather[0].main;
-        let currentWeatherConditionIcon = $('<img>')
-
-
+        let weatherConditionIcon = $('<img>');
+        //Calls Function that appends weather icon
         addWeatherIcon(currentWeatherCondition);
-        $('h2').append($('<span>').html(currentWeatherConditionIcon));
+        $('h2').append($('<span>').html(weatherConditionIcon));
 
 
-        //Current and 5-Day Forecast
+        //Second API call for all weather data
         $.ajax({
             url: fiveDayURL,
             method: "GET"
         })
         .then(function(response2){
-        
-            // set current temperature
+            console.log(response2);
+
+            //Sets and appends current temperature
             $('#current-weather').append($('<p>').html(`Temperature: ${response2.current.temp} &#8457;`));
 
-            // set humidity            
+            //Sets and appends current humidity
             $('#current-weather').append($('<p>').text(`Humidity: ${response2.current.humidity}%`));
 
-            // set wind speed
+            //Sets and appends current wind speed
             $('#current-weather').append($('<p>').text(`Wind Speed: ${response2.current.wind_speed} MPH`));
 
-            // set uv index
+            //Sets and appends current uv index
             let uvIndexAdd = $('<p>');
             let uvIndexNumber = $('<span>');
             uvIndexNumber.addClass('p-2');
             let uvIndex = response2.current.uvi;
             $('#current-weather').append(uvIndexAdd.text(`UV Index: `));
-            //if uvIndex number, make uvIndexNumber background-color change
+            //Adds style based on uv index number (by adding a specific ID)
             if(uvIndex < 3){
                 uvIndexNumber.attr('id', 'uv-index-low')
             } else if(uvIndex < 6){
@@ -152,73 +169,65 @@ function cityWeatherInformation(cityName){
             } else {
                 console.log("issue with uv index")
             };
-
             uvIndexAdd.append(uvIndexNumber.text(uvIndex));
      
-
-
-            // get 5 day forecast
+            //Sets 5 day forecast
             for (i = 1; i < 6; i++){
-
+                //For specific day
                 let day = response2.daily[i];
-                
-                //next date
+                //Assigns data to variables
                 let newUnixTime = day.dt;
                 let newDateData = new Date(newUnixTime * 1000);
                 let dayMonth = newDateData.getMonth() + 1;
                 let dayDate = newDateData.getDate();
                 let dayYear = newDateData.getFullYear();
 
-
-
-                //Append date
+                //Appends date
                 let addTo = '#day-' + i;
-
                 $(addTo).append($('<h6>').text(`${dayMonth}/${dayDate}/${dayYear}`));
 
-                //update
-                currentWeatherConditionIcon = $('<img>');
+                //Calls function to append weather icon
+                weatherConditionIcon = $('<img>');
                 let fiveDayWeatherCondition = day.weather[0].main;
-
                 addWeatherIcon(fiveDayWeatherCondition);
-                $(addTo).append(currentWeatherConditionIcon);
+                $(addTo).append(weatherConditionIcon);
 
-
+                //Appends temperature
                 $(addTo).append($('<p>').html(`Temp: ${day.temp.day} &#8457;`));
 
+                //Appends Humidity
                 $(addTo).append($('<p>').text(`Humidity: ${day.humidity}%`));
-
-
             };
-
         });
     
-        function addWeatherIcon(weatherCondition){
+
+        //Function created to add weather icon
+        function addWeatherIcon(setWeatherCondition){
             let iconURL; 
-            switch(weatherCondition){
+            switch(setWeatherCondition){
                 case 'Clear':
                     iconURL = "http://openweathermap.org/img/wn/01d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;
                 case 'Clouds':
                     iconURL = "http://openweathermap.org/img/wn/04d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;  
                 case 'Drizzle':
                     iconURL = "http://openweathermap.org/img/wn/09d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;
                 case 'Rain':
                     iconURL = "http://openweathermap.org/img/wn/10d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;      
                 case 'Thunderstorm':
                     iconURL = "http://openweathermap.org/img/wn/11d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;
                 case 'Snow':
                     iconURL = "http://openweathermap.org/img/wn/13d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;
                 case 'Mist':
                 case 'Smoke':
@@ -230,31 +239,22 @@ function cityWeatherInformation(cityName){
                 case 'Squall':
                 case 'Tornado':
                     iconURL = "http://openweathermap.org/img/wn/50d@2x.png";
-                    currentWeatherConditionIcon.attr('src', iconURL)
+                    weatherConditionIcon.attr('src', iconURL)
                     break;
                 default: 
                     console.log("Issue with the icons");
-                    console.log(weatherCondition);
+                    console.log(setWeatherCondition);
             };
         };
-    
     });
-
-
 };
 
-
-//search button clicked, call function to create a button and show result
-$('#search-button').click(addSearch);
-
-//city button clicked
-$('#city-buttons').click(searchHistoryCity);
 
 
 //call local storage function once page opens
 function dispalySearchHistory() {
     //get objects from localStorage
-    searchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+    let searchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
     if(!searchHistory){
         return;
     };
@@ -269,4 +269,11 @@ function dispalySearchHistory() {
     };
 };
 
+//search button clicked, call function to create a button and show result
+$('#search-button').click(addSearch);
+
+//city button clicked
+$('#city-buttons').click(searchHistoryCity);
+
+//When page loads
 dispalySearchHistory();
