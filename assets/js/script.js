@@ -146,7 +146,6 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
             method: "GET"
         })
         .then(function(response2){
-            console.log(response2);
 
             //Sets and appends current temperature
             $('#current-weather').append($('<p>').html(`Temperature: ${response2.current.temp} &#8457;`));
