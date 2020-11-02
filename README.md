@@ -14,7 +14,7 @@ Please click [here](https://christina2021.github.io/weather-checker/) to use thi
 
 ## Usage
 
-Once the site opens, there will be a Search section.  Cities that were previously searched for will be listed.
+Once the site opens, there will be a Search section.  Cities that were previously searched for will be listed.  Clicking on the city buttons will pull up the current data for that city.
 
 ![screenshot](./assets/images/readme-screenshot2.png)
 
