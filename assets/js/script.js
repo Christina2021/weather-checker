@@ -24,7 +24,7 @@ function addSearch(e) {
     $('#search-city').val('');
 
     //Formats and stores city name for api call
-    let cityButtonRevised = citySearchName.toLowerCase().split(' ').join('+');
+    let cityButtonRevised = citySearchName.trim().toLowerCase().split(' ').join('+');
 
     //Runs function for results section
     cityWeatherInformation(cityButtonRevised, citySearchName);
@@ -40,7 +40,7 @@ function searchHistoryCity(event){
     //Formats city name then runs function for results section
     let cityButtonClicked = '';
     cityButtonClicked = event.target.id;
-    cityButtonClicked = cityButtonClicked.toLowerCase().split(' ').join('+');
+    cityButtonClicked = cityButtonClicked.trim().toLowerCase().split(' ').join('+');
     cityWeatherInformation(cityButtonClicked);
 
 };
@@ -76,34 +76,40 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
 
         //If a new button needs to be created (city was entered in search field); also adds to localStorage
         if(createNewButton){
-            //Create a new button and add classes
-            let newCityButton = $('<button>');
-            newCityButton.addClass('btn btn-primary mb-1');
-            //Creates ID based on city name; adds city name to the new button
-            newCityButton.attr('id', cityButtonName);
-            newCityButton.html(cityButtonName);
-            //Adds new button to the site
-            $('#city-buttons').prepend(newCityButton);
+            //Checks to make sure a button has not already been created for the city name
+            let checkCityButton = cityButtonName.trim().toLowerCase().split(' ').join('-');
+            //If the button does not exist, create a new button
+            if(!$("#" + checkCityButton).length){
+                //Create a new button and add classes
+                let newCityButton = $('<button>');
+                newCityButton.addClass('btn btn-primary mb-1');
+                //Creates ID based on city name; adds city name to the new button
+                let cityButtonID = cityButtonName.trim().toLowerCase().split(' ').join('-');
+                newCityButton.attr('id', cityButtonID);
+                newCityButton.html(cityButtonName);
+                //Adds new button to the site
+                $('#city-buttons').prepend(newCityButton);
 
-            //For localStorage
-            //Variables for search history (allSearchHistory for all objects into an array; addSearchHistory for each object)
-            let allSearchHistory = [];
-            let addSearchHistory = {city: cityButtonName};
-            //Gets current search history from localStorage; parse data
-            allSearchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
-            //If nothing currently in local storage
-            if(!allSearchHistory){
-                //Search history should be an empty array
-                allSearchHistory = [];
-                //Adds first object to allSearchHistory
-                allSearchHistory[0] = addSearchHistory;
-            } else {
-                //Adds new object to allSearchHistory
-                allSearchHistory.push(addSearchHistory);
-            }
-            //Convert object into a string to store
-            localStorage.setItem("citySearchHistory",JSON.stringify(allSearchHistory));
-            createNewButton = false;
+                //For localStorage
+                //Variables for search history (allSearchHistory for all objects into an array; addSearchHistory for each object)
+                let allSearchHistory = [];
+                let addSearchHistory = {city: cityButtonName};
+                //Gets current search history from localStorage; parse data
+                allSearchHistory = JSON.parse(localStorage.getItem("citySearchHistory"));
+                //If nothing currently in local storage
+                if(!allSearchHistory){
+                    //Search history should be an empty array
+                    allSearchHistory = [];
+                    //Adds first object to allSearchHistory
+                    allSearchHistory[0] = addSearchHistory;
+                } else {
+                    //Adds new object to allSearchHistory
+                    allSearchHistory.push(addSearchHistory);
+                }
+                //Convert object into a string to store
+                localStorage.setItem("citySearchHistory",JSON.stringify(allSearchHistory));
+                createNewButton = false;
+            };
         };
 
         //Remove hidden attribute from results html
@@ -263,7 +269,8 @@ function dispalySearchHistory() {
         newCityButton = $('<button>');
         newCityButton.addClass('btn btn-primary mb-1');
         cityButtonName = searchHistory[i].city;
-        newCityButton.attr('id', cityButtonName);
+        cityButtonID = cityButtonName.trim().toLowerCase().split(' ').join('-');
+        newCityButton.attr('id', cityButtonID);
         newCityButton.html(cityButtonName);
         //Prepends the buttons to the html
         $('#city-buttons').prepend(newCityButton);
