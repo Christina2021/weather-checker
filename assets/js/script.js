@@ -269,7 +269,7 @@ function dispalySearchHistory() {
         newCityButton = $('<button>');
         newCityButton.addClass('btn btn-primary mb-1');
         cityButtonName = searchHistory[i].city;
-        cityButtonID = cityButtonName.trim().toLowerCase().split(' ').join('-');
+        cityButtonID = cityButtonName.trim().toLowerCase().split(' ').join('+');
         newCityButton.attr('id', cityButtonID);
         newCityButton.html(cityButtonName);
         //Prepends the buttons to the html

@@ -20,7 +20,6 @@ main {
 .search-area {
     float:left;
     width: 30vw;
-    
     background-color: #caf0f8;
 }
 #search-header {
@@ -43,6 +42,7 @@ main {
 }
 #current-weather {
     border: 1px solid #03045e;
+    border-radius: 5%;
     background-color: #caf0f8;
 }
 /* UV index classes based on number */
