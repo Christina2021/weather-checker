@@ -1,5 +1,5 @@
 //API key taken from config.js file
-let myKey = hideKey.apiKey;
+let myKey = "3a2a915b8f023f402c5626fb6dfb79e6";
 
 //If new button needs to be created
 let createNewButton;
