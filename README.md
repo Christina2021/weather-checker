@@ -33,7 +33,9 @@ Once the site opens, there will be a Search section.  Cities that were previousl
 #### Notes on Usage
 
 🌤️If you enter in a city name that does not exist in OpenWeather, then you will receive an alert regarding this.\
-🌤️If you enter in a city in the search field that already is listed from the history, the results will still pull up, but a new button will not be created.
+🌤️If you enter in a city in the search field that already is listed from the history, the results will still pull up, but a new button will not be created.\
+🌤️Hovering over the weather condition icon will display a description of the weather condition.
+
 
 ## What I Learned 💭
 
@@ -45,7 +47,9 @@ I was able to learn more about API calls while creating this site, as well as ob
 
 ## Acknowledgements
 
-My awesome study group! ❤️
+Thank you for all of the help and support!
+[Brian](https://github.com/btparker70)
+
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/#)
