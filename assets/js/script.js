@@ -138,6 +138,7 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
         //Adds title to icon
         let weatherConditionText = response1.weather[0].description;
         weatherConditionIcon.attr('title','Conditions: ' + weatherConditionText);
+        weatherConditionIcon.addClass('conditions-text');
         //Calls Function that appends weather icon
         addWeatherIcon(currentWeatherCondition);
         $('h2').append($('<span>').html(weatherConditionIcon));
@@ -200,6 +201,7 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
                 let fiveDayWeatherCondition = day.weather[0].main;
                 let fiveDayConditionText = day.weather[0].description;
                 weatherConditionIcon.attr('title','Conditions: ' + fiveDayConditionText);
+                weatherConditionIcon.addClass('conditions-text');
                 addWeatherIcon(fiveDayWeatherCondition);
                 $(addTo).append(weatherConditionIcon);
 
@@ -287,6 +289,11 @@ $('#search-button').click(addSearch);
 
 //When one of the city buttons are clicked:
 $('#city-buttons').click(searchHistoryCity);
+
+//When hovering over the weather conditions icon
+$('.conditions-text').hover(function(){
+    $(this).css('cursor','auto');
+});
 
 //When the page opens:
 dispalySearchHistory();
