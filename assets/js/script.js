@@ -135,6 +135,9 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
         //Add icon to h2 based on current weather conditions
         let currentWeatherCondition = response1.weather[0].main;
         let weatherConditionIcon = $('<img>');
+        //Adds title to icon
+        let weatherConditionText = response1.weather[0].description;
+        weatherConditionIcon.attr('title','Conditions: ' + weatherConditionText);
         //Calls Function that appends weather icon
         addWeatherIcon(currentWeatherCondition);
         $('h2').append($('<span>').html(weatherConditionIcon));
@@ -187,6 +190,7 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
                 let dayDate = newDateData.getDate();
                 let dayYear = newDateData.getFullYear();
 
+
                 //Appends date
                 let addTo = '#day-' + i;
                 $(addTo).append($('<h6>').text(`${dayMonth}/${dayDate}/${dayYear}`));
@@ -194,6 +198,8 @@ function cityWeatherInformation(cityAPIName,cityButtonName){
                 //Calls function to append weather icon
                 weatherConditionIcon = $('<img>');
                 let fiveDayWeatherCondition = day.weather[0].main;
+                let fiveDayConditionText = day.weather[0].description;
+                weatherConditionIcon.attr('title','Conditions: ' + fiveDayConditionText);
                 addWeatherIcon(fiveDayWeatherCondition);
                 $(addTo).append(weatherConditionIcon);
 
